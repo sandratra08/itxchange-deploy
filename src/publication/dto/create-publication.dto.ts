@@ -1,7 +1,8 @@
-import { IsString } from 'class-validator';
+import { MinLength } from 'class-validator';
 
 export class CreatePublicationDto {
-  @IsString()
+  @MinLength(1)
   body: string;
+  @MinLength(1, { each: true })
   tags: string[];
 }
