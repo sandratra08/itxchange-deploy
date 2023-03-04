@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { Repository } from 'typeorm';
 import { DetaService } from './../deta/deta.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import {
@@ -23,6 +24,7 @@ export class PublicationService {
     @InjectRepository(Publication)
     private publicationsRepository: PublicationRepository,
     private readonly detaModule: DetaService,
+    private publicationRepository: Repository<Publication>,
   ) {}
 
   async create(

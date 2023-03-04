@@ -32,6 +32,10 @@ import { DetaService } from './deta/deta.service';
 import { DetaModule } from './deta/deta.module';
 import { TagModule } from './tag/tag.module';
 import { CommentsModule } from './comments/comments.module';
+import { ReactionsModule } from './reactions/reactions.module';
+import { User } from './users/entities/user.entity';
+import { Publication } from './publication/entities/publication.entity';
+import { Reaction } from './reactions/entities/reaction.entity';
 
 @Module({
   imports: [
@@ -57,6 +61,7 @@ import { CommentsModule } from './comments/comments.module';
         return dataSource;
       },
     }),
+    TypeOrmModule.forFeature([User, Publication, Reaction]),
     MailerModule.forRootAsync({
       useClass: MailConfigService,
     }),
@@ -91,6 +96,7 @@ import { CommentsModule } from './comments/comments.module';
     DetaModule,
     TagModule,
     CommentsModule,
+    ReactionsModule,
   ],
   providers: [DetaService],
 })

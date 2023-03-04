@@ -65,4 +65,13 @@ export class DbPublicationBuilder {
         .build(),
     );
   }
+
+  static fromPublication(data: Publication): DbPublicationDto {
+    const dto = new DbPublicationDto(data);
+    return dto;
+  }
+
+  static fromPublications(publications: Publication[]): DbPublicationDto[] {
+    return publications.map((item) => this.fromPublication(item));
+  }
 }

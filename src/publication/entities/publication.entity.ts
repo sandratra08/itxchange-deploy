@@ -10,6 +10,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Reaction } from '@/reactions/entities/reaction.entity';
+import { DbPublicationDto } from '../dto/db-publication.dto';
 
 @Entity()
 export class Publication {
@@ -48,6 +50,11 @@ export class Publication {
 
   @OneToMany(() => Comments, (comments) => comments.publication)
   comments: Comments[];
+  @ManyToOne(() => Reaction, (data) => data.publications, {
+    eager: true,
+    nullable: true,
+  })
+  reactions: Reaction;
 }
 
 export class PublicationBuilder {
