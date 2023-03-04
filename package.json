@@ -42,6 +42,7 @@
     "bcryptjs": "2.4.3",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
+    "deta": "^1.1.0",
     "fb": "2.0.0",
     "google-auth-library": "8.7.0",
     "handlebars": "4.7.7",
@@ -59,7 +60,8 @@
     "source-map-support": "0.5.21",
     "swagger-ui-express": "4.6.2",
     "twitter": "1.7.1",
-    "typeorm": "0.3.12"
+    "typeorm": "0.3.12",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "9.2.0",

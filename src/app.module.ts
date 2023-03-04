@@ -27,6 +27,9 @@ import { ForgotModule } from './forgot/forgot.module';
 import { MailModule } from './mail/mail.module';
 import { HomeModule } from './home/home.module';
 import { DataSource } from 'typeorm';
+import { PublicationModule } from './publication/publication.module';
+import { DetaService } from './deta/deta.service';
+import { DetaModule } from './deta/deta.module';
 
 @Module({
   imports: [
@@ -82,6 +85,9 @@ import { DataSource } from 'typeorm';
     ForgotModule,
     MailModule,
     HomeModule,
+    PublicationModule,
+    DetaModule,
   ],
+  providers: [DetaService],
 })
 export class AppModule {}
