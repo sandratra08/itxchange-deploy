@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Reaction } from '@/reactions/entities/reaction.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { DbPublicationDto } from '../dto/db-publication.dto';
 
 @Entity()
 export class Publication {
@@ -19,6 +21,22 @@ export class Publication {
 
   @Column()
   file: string;
+
+  @ManyToOne(() => Reaction, (data) => data.publications, {
+    eager: true,
+    nullable: true,
+  })
+  reactions: Reaction;
+
+  getDto(): DbPublicationDto {
+    const dto = new DbPublicationDto();
+    dto.id = this.id;
+    dto.date = this.date;
+    dto.view = this.view;
+    dto.type = this.type;
+    dto.file = this.file;
+    return dto;
+  }
 }
 
 export class PublicationBuilder {

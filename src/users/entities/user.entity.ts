@@ -18,6 +18,7 @@ import * as bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
 import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
 import { Exclude, Expose } from 'class-transformer';
+import { Reaction } from 'src/reactions/entities/reaction.entity';
 
 @Entity()
 export class User extends EntityHelper {
@@ -94,4 +95,10 @@ export class User extends EntityHelper {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToOne(() => Reaction, (data) => data.users, {
+    eager: true,
+    nullable: true,
+  })
+  reactions: Reaction;
 }

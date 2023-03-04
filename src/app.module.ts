@@ -30,6 +30,10 @@ import { DataSource } from 'typeorm';
 import { PublicationModule } from './publication/publication.module';
 import { DetaService } from './deta/deta.service';
 import { DetaModule } from './deta/deta.module';
+import { ReactionsModule } from './reactions/reactions.module';
+import { User } from './users/entities/user.entity';
+import { Publication } from './publication/entities/publication.entity';
+import { Reaction } from './reactions/entities/reaction.entity';
 
 @Module({
   imports: [
@@ -55,6 +59,7 @@ import { DetaModule } from './deta/deta.module';
         return dataSource;
       },
     }),
+    TypeOrmModule.forFeature([User, Publication, Reaction]),
     MailerModule.forRootAsync({
       useClass: MailConfigService,
     }),
@@ -87,6 +92,7 @@ import { DetaModule } from './deta/deta.module';
     HomeModule,
     PublicationModule,
     DetaModule,
+    ReactionsModule,
   ],
   providers: [DetaService],
 })
