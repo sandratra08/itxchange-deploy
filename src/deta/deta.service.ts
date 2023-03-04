@@ -11,58 +11,58 @@ export class DetaService {
     this.deta = Deta(this.configService.get<string>('DETA_PROJECT_KEY'));
   }
 
-  getClientDrive() {
-    return this.deta.Drive('client-photo');
+  getUserDrive() {
+    return this.deta.Drive('user-drive');
   }
 
-  getPieceDrive() {
+  getPublicationDrive() {
     return this.deta.Drive('ticket-piece');
   }
 
-  async uploadClientFile(filename: string, data: Buffer): Promise<string> {
+  async uploadUserFile(filename: string, data: Buffer): Promise<string> {
     const uniqueFilename = this.getUniqueFileName(filename);
-    const drive = this.getClientDrive();
+    const drive = this.getUserDrive();
     try {
       await drive.put(uniqueFilename, { data });
     } catch {}
     return uniqueFilename;
   }
 
-  async deleteClientFile(filename: string): Promise<void> {
-    const drive = this.getClientDrive();
+  async deleteUserFile(filename: string): Promise<void> {
+    const drive = this.getUserDrive();
     try {
       await drive.delete(filename);
     } catch {}
   }
 
-  async downloadClientFile(filename: string): Promise<Buffer> {
+  async downloadUserFile(filename: string): Promise<Buffer> {
     try {
-      const img = await this.getClientDrive().get(filename);
+      const img = await this.getUserDrive().get(filename);
       const buffer = await img.arrayBuffer();
       return Buffer.from(buffer);
     } catch {}
     return null;
   }
 
-  async uploadPieceFile(filename: string, data: Buffer): Promise<string> {
+  async uploadPublicationFile(filename: string, data: Buffer): Promise<string> {
     const uniqueFilename = this.getUniqueFileName(filename);
-    const drive = this.getPieceDrive();
+    const drive = this.getPublicationDrive();
     try {
       await drive.put(uniqueFilename, { data });
     } catch {}
     return uniqueFilename;
   }
 
-  async deletePieceFile(filename: string): Promise<void> {
-    const drive = this.getPieceDrive();
+  async deletePublicationFile(filename: string): Promise<void> {
+    const drive = this.getPublicationDrive();
     try {
       await drive.delete(filename);
     } catch {}
   }
 
-  async downloadPieceFile(filename: string): Promise<Buffer> {
+  async downloadPublicationFile(filename: string): Promise<Buffer> {
     try {
-      const img = await this.getPieceDrive().get(filename);
+      const img = await this.getPublicationDrive().get(filename);
       const buffer = await img.arrayBuffer();
       return Buffer.from(buffer);
     } catch {}

@@ -30,6 +30,8 @@ import { DataSource } from 'typeorm';
 import { PublicationModule } from './publication/publication.module';
 import { DetaService } from './deta/deta.service';
 import { DetaModule } from './deta/deta.module';
+import { TagModule } from './tag/tag.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -87,6 +89,8 @@ import { DetaModule } from './deta/deta.module';
     HomeModule,
     PublicationModule,
     DetaModule,
+    TagModule,
+    CommentsModule,
   ],
   providers: [DetaService],
 })

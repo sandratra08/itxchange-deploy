@@ -1,31 +1,34 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Request,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-  HttpStatus,
-  UseInterceptors,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { PublicationService } from './publication.service';
+import { User } from 'src/users/entities/user.entity';
+import { ParseEntityPipe } from './../utils/validators/validation.pipes';
 import { CreatePublicationDto } from './dto/create-publication.dto';
-import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { DbPublicationDto } from './dto/db-publication.dto';
+import { Publication } from './entities/publication.entity';
+import { PublicationService } from './publication.service';
 
 @Controller('publications')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 
-  @ApiBearerAuth()
   @Post()
+  @ApiBearerAuth()
   @HttpCode(201)
   @ApiConsumes('multipart/form-data')
   @ApiOkResponse({
@@ -34,30 +37,58 @@ export class PublicationController {
   })
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
-  create(@Request() request: any, @Body() dto: CreatePublicationDto) {
-    return this.publicationService.create(request.user, dto);
+  create(
+    @Request() request: any,
+    @Body() dto: CreatePublicationDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.publicationService.create(request.user, dto, file);
   }
 
   @Get()
+  @ApiOkResponse({
+    type: Array<DbPublicationDto>,
+  })
   findAll() {
     return this.publicationService.findAll();
   }
 
+  @Get('/profile/:id')
+  @ApiOkResponse({
+    type: Array<DbPublicationDto>,
+  })
+  findByUser(@Param('id', ParseEntityPipe) user: User) {
+    return this.publicationService.findByUserId(user.id);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.publicationService.findOne(+id);
+  @ApiOkResponse({
+    type: DbPublicationDto,
+  })
+  findOne(@Param('id', ParseEntityPipe) publication: Publication) {
+    return this.publicationService.findOne(publication);
   }
 
   @Patch(':id')
+  @ApiOkResponse({
+    type: DbPublicationDto,
+  })
   update(
-    @Param('id') id: string,
-    @Body() updatePublicationDto: UpdatePublicationDto,
+    @Request() req: any,
+    @Param('id') publication: Publication,
+    @Body() dto: CreatePublicationDto,
   ) {
-    return this.publicationService.update(+id, updatePublicationDto);
+    return this.publicationService.update(req.user, publication, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.publicationService.remove(+id);
+  remove(
+    @Request() req: any,
+    @Param('id', ParseEntityPipe) publication: Publication,
+  ) {
+    return this.publicationService.remove(req.user, publication.id);
   }
+
+  // TODO: GET COMMENTS BY PUBLICATION
+  // TODO: GET REACTION BY PUBLICATION
 }

@@ -1,4 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Comments } from './../../comments/entities/comment.entity';
+import { Tag } from 'src/tag/entities/tag.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Publication {
@@ -19,6 +30,24 @@ export class Publication {
 
   @Column()
   file: string;
+
+  @ManyToOne(() => User, (user) => user.publications, {
+    eager: true,
+    nullable: false,
+  })
+  user: User;
+
+  @ManyToMany(() => Tag, (tag) => tag.publications, {
+    eager: true,
+    nullable: false,
+  })
+  @JoinTable({
+    name: 'publications_tags',
+  })
+  tags: Tag[];
+
+  @OneToMany(() => Comments, (comments) => comments.publication)
+  comments: Comments[];
 }
 
 export class PublicationBuilder {
@@ -50,6 +79,11 @@ export class PublicationBuilder {
 
   file(file: string) {
     this.publication.file = file;
+    return this;
+  }
+
+  user(user: User) {
+    this.publication.user = user;
     return this;
   }
 

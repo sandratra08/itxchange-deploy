@@ -1,3 +1,5 @@
+import { Comments } from './../../comments/entities/comment.entity';
+import { Publication } from './../../publication/entities/publication.entity';
 import {
   Column,
   AfterLoad,
@@ -10,6 +12,7 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
 import { Role } from '../../roles/entities/role.entity';
 import { Status } from '../../statuses/entities/status.entity';
@@ -94,4 +97,10 @@ export class User extends EntityHelper {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => Publication, (publication) => publication.user)
+  publications: Publication[];
+
+  @OneToMany(() => Comments, (comment) => comment.user)
+  comments: Comments[];
 }
