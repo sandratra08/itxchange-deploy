@@ -1,3 +1,4 @@
+import { TagModule } from './../tag/tag.module';
 import { DetaModule } from './../deta/deta.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,7 +9,12 @@ import { PublicationService } from './publication.service';
 import { PublicationRepository } from './publication.repository';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forFeature([Publication]), DetaModule],
+  imports: [
+    UsersModule,
+    TypeOrmModule.forFeature([Publication]),
+    DetaModule,
+    TagModule,
+  ],
   controllers: [PublicationController],
   providers: [PublicationService, PublicationRepository],
   exports: [PublicationService, PublicationRepository],

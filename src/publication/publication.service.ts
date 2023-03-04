@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { DetaService } from './../deta/deta.service';
+import { TagService } from './../tag/tag.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import {
   DbPublicationBuilder,
@@ -23,6 +24,7 @@ export class PublicationService {
     @InjectRepository(Publication)
     private publicationsRepository: PublicationRepository,
     private readonly detaModule: DetaService,
+    private readonly tagService: TagService,
   ) {}
 
   async create(
@@ -34,6 +36,8 @@ export class PublicationService {
       id: user.id,
     });
 
+    const tags = await this.tagService.bulkCreate(dto.tags);
+
     const filename = await this.detaModule.uploadPublicationFile(
       file.originalname,
       file.buffer,
@@ -43,6 +47,7 @@ export class PublicationService {
       .user(user)
       .file(filename)
       .body(dto.body)
+      .tags(tags)
       .build();
 
     publication = await this.publicationsRepository.save(publication);
@@ -71,7 +76,15 @@ export class PublicationService {
     dto: CreatePublicationDto,
   ) {
     await this.findUserPublicationOrThrow(user);
-    publication.body = dto.body;
+    const values = await this.tagService.findTagById(publication, dto.tags);
+
+    const tags = await this.tagService.bulkCreate(values);
+
+    publication = PublicationBuilder.getBuilder(publication)
+      .body(dto.body)
+      .tags(tags)
+      .build();
+
     await this.publicationsRepository.update(publication.id, publication);
     return new DbPublicationDto(publication);
   }

@@ -1,5 +1,11 @@
 import { Publication } from 'src/publication/entities/publication.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import {
+  Column,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Entity,
+  Unique,
+} from 'typeorm';
 
 @Entity()
 export class Tag {
@@ -7,6 +13,7 @@ export class Tag {
   id: number;
 
   @Column()
+  @Unique('constraint_name', ['name'])
   name: string;
 
   @OneToMany(() => Publication, (publication) => publication.tags)

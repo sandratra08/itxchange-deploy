@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Publication } from 'src/publication/entities/publication.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import { Repository } from 'typeorm';
 import { BaseTagDto } from './dto/base-tag.dto';
@@ -27,6 +28,12 @@ export class TagService {
     return new DBTagDto(tag);
   }
 
+  async bulkCreate(data: string[]) {
+    const instances = data.map((d) => TagBuilder.builder().name(d).build());
+    const tags = await this.tagsRepository.save(instances);
+    return tags;
+  }
+
   async findAll() {
     const tags = await this.tagsRepository.find();
     return tags.map((tag) => new DBTagDto(tag));
@@ -44,5 +51,17 @@ export class TagService {
 
   async remove(tag: Tag) {
     await this.tagsRepository.delete(tag.id);
+  }
+
+  async findTagById(pub: Publication, values: string[]) {
+    const tags = await this.tagsRepository.find({
+      where: {
+        publications: {
+          id: pub.id,
+        },
+      },
+    });
+
+    return values.filter((value) => tags.find((tag) => tag.name !== value));
   }
 }

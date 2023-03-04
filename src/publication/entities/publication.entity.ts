@@ -87,6 +87,17 @@ export class PublicationBuilder {
     return this;
   }
 
+  tags(tags: Tag[]) {
+    this.publication.tags = tags;
+    return this;
+  }
+
+  public static getBuilder(publication: Publication) {
+    const builderPub = new PublicationBuilder();
+    builderPub.publication = publication;
+    return builderPub;
+  }
+
   build() {
     return this.publication;
   }
