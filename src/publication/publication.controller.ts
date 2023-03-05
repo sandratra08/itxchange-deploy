@@ -55,6 +55,14 @@ export class PublicationController {
     return this.publicationService.create(request.user, dto, file);
   }
 
+  @Post(':user_id/:publication_id/')
+  async addView(
+    @Param('user_id', ParseEntityPipe) user: User,
+    @Param('publication_id', ParseEntityPipe) publication: Publication,
+  ) {
+    await this.publicationService.addView(user, publication);
+  }
+
   @Get()
   @ApiOkResponse({
     type: Array<DbPublicationDto>,

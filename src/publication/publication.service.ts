@@ -135,7 +135,25 @@ export class PublicationService {
     return this.publicationsRepository.save(publication);
   }
 
-  async removeInteraction(publication: Publication) {
+  async removeInteraction(user: User, publication: Publication) {
     await this.publicationsRepository.update(publication.id, publication);
+  }
+
+  async addView(user: User, publication: Publication) {
+    const db_publication = await this.publicationsRepository.findOne({
+      id: publication.id,
+      user: {
+        id: user.id,
+      },
+    });
+
+    if (!db_publication) {
+      db_publication.viewers.push(user);
+      db_publication.view = db_publication.viewers.length;
+      await this.publicationsRepository.update(
+        db_publication.id,
+        db_publication,
+      );
+    }
   }
 }
