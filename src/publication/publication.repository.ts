@@ -16,7 +16,9 @@ export class PublicationRepository {
   }
 
   findAll() {
-    return this.publicationsRepository.find();
+    return this.publicationsRepository.find({
+      relations: ['tags', 'user', 'comments'],
+    });
   }
 
   findOne(fields: EntityCondition<Publication>) {

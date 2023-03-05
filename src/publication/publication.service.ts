@@ -135,7 +135,7 @@ export class PublicationService {
     return this.publicationsRepository.save(publication);
   }
 
-  async removeInteraction(user: User, publication: Publication) {
+  async removeInteraction(publication: Publication) {
     await this.publicationsRepository.update(publication.id, publication);
   }
 

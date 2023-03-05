@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { ParseEntityPipe } from './../utils/validators/validation.pipes';
 import { CommentsService } from './comments.service';
@@ -18,6 +18,7 @@ import { BaseCommentDto, CreateCommentDto } from './dto/base-comment.dto';
 import { Comments } from './entities/comment.entity';
 
 @Controller('comments')
+@ApiTags('Comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 

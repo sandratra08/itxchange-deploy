@@ -33,6 +33,8 @@ export class CommentsService {
       .publication(publication)
       .build();
 
+    publication.total_comments += 1;
+    await this.publicationsRepository.save(publication);
     comment = await this.commentsRepository.save(comment);
     return DbCommentDto.dtoFromComment(comment);
   }

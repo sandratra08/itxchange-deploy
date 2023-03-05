@@ -22,6 +22,12 @@ export class Publication {
   @Column({ default: 0 })
   view: number;
 
+  @Column({ default: 0 })
+  total_interactions: number;
+
+  @Column({ default: 0 })
+  total_comments: number;
+
   @Column()
   type: string;
 
@@ -32,14 +38,13 @@ export class Publication {
   file: string;
 
   @ManyToOne(() => User, (user) => user.publications, {
-    eager: true,
+    lazy: true,
     nullable: false,
   })
   user: User;
 
   @ManyToMany(() => Tag, (tag) => tag.publications, {
-    eager: true,
-    nullable: false,
+    lazy: false,
   })
   @JoinTable({
     name: 'publications_tags',
@@ -52,12 +57,12 @@ export class Publication {
   comments: Comments[];
 
   @OneToMany(() => User, (user) => user.reactions, {
-    eager: true,
+    lazy: true,
   })
   interactors: User[];
 
   @OneToMany(() => User, (user) => user.views, {
-    eager: true,
+    lazy: true,
   })
   viewers: User[];
 }

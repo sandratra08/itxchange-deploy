@@ -33,6 +33,7 @@ export class ReactionService {
     }
 
     publication.interactors.push(db_user);
+    publication.total_interactions += 1;
 
     await this.publicationsService.createInteraction(publication);
     return new DbPublicationDto(publication);

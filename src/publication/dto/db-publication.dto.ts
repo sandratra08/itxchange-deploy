@@ -1,7 +1,5 @@
 import { Tag } from 'src/tag/entities/tag.entity';
-import { Comments } from './../../comments/entities/comment.entity';
 import { Publication } from '../entities/publication.entity';
-import { DbCommentDto } from './../../comments/dto/base-comment.dto';
 import { DBTagDto } from './../../tag/dto/db-tag.dto';
 import { DbUserDto } from './../../users/dto/db-user.dto';
 import { parseDateToString } from './../../utils/index';
@@ -13,8 +11,9 @@ export class DbPublicationDto {
   body: string;
   file: string;
   tags: DBTagDto[];
-  comments: DbCommentDto[];
   user: DbUserDto;
+  total_interactions: number;
+  total_comments: number;
 
   constructor(publication: Publication) {
     this.id = publication.id;
@@ -24,11 +23,9 @@ export class DbPublicationDto {
     this.body = publication.body;
     this.file = publication.file;
     this.tags = publication.tags.map((tag) => new DBTagDto(tag));
-    this.comments =
-      publication.comments?.map((comment) =>
-        DbCommentDto.dtoFromComment(comment),
-      ) || [];
     this.user = DbUserDto.dtoFromUser(publication.user);
+    this.total_comments = publication.total_comments;
+    this.total_interactions = publication.total_interactions;
   }
 }
 
@@ -70,10 +67,13 @@ export class DbPublicationBuilder {
     return this;
   }
 
-  comments(comments: Comments[]) {
-    this.db.comments = comments.map((comment) =>
-      DbCommentDto.dtoFromComment(comment),
-    );
+  total_interactions(total: number) {
+    this.db.total_interactions = total;
+    return this;
+  }
+
+  total_comments(total: number) {
+    this.db.total_comments = total;
     return this;
   }
 

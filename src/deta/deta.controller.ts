@@ -1,7 +1,9 @@
+import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Param, StreamableFile } from '@nestjs/common';
 import { DetaService } from './deta.service';
 
 @Controller('deta')
+@ApiTags('Deta')
 export class DetaController {
   constructor(private readonly detaService: DetaService) {}
   @Get('publications/:filename')
