@@ -1,5 +1,3 @@
-import { Reaction } from 'src/reaction/entities/reaction.entity';
-import { Comments } from './../../comments/entities/comment.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -11,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Comments } from './../../comments/entities/comment.entity';
 
 @Entity()
 export class Publication {
@@ -52,10 +51,10 @@ export class Publication {
   })
   comments: Comments[];
 
-  @OneToMany(() => Reaction, (reactions) => reactions.publication, {
+  @OneToMany(() => User, (user) => user.reactions, {
     eager: true,
   })
-  reactions: Reaction[];
+  interactors: User[];
 }
 
 export class PublicationBuilder {

@@ -1,27 +1,28 @@
-import { Reaction } from 'src/reaction/entities/reaction.entity';
-import { Comments } from './../../comments/entities/comment.entity';
-import { Publication } from './../../publication/entities/publication.entity';
+import * as bcrypt from 'bcryptjs';
+import { Exclude, Expose } from 'class-transformer';
+import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
+import { EntityHelper } from 'src/utils/entity-helper';
 import {
-  Column,
   AfterLoad,
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   Index,
+  JoinColumn,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  BeforeInsert,
-  BeforeUpdate,
-  OneToMany,
 } from 'typeorm';
+import { FileEntity } from '../../files/entities/file.entity';
 import { Role } from '../../roles/entities/role.entity';
 import { Status } from '../../statuses/entities/status.entity';
-import { FileEntity } from '../../files/entities/file.entity';
-import * as bcrypt from 'bcryptjs';
-import { EntityHelper } from 'src/utils/entity-helper';
-import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
-import { Exclude, Expose } from 'class-transformer';
+import { Comments } from './../../comments/entities/comment.entity';
+import { Publication } from './../../publication/entities/publication.entity';
 
 @Entity()
 export class User extends EntityHelper {
@@ -105,13 +106,9 @@ export class User extends EntityHelper {
   @OneToMany(() => Comments, (comment) => comment.user)
   comments: Comments[];
 
-  @OneToMany(() => Reaction, (reactions) => reactions.user, {
+  @ManyToMany(() => Publication, (publications) => publications.interactors, {
     eager: true,
   })
-  reactions: Reaction[];
-
-  @OneToMany(() => Reaction, (reactions) => reactions.users_views, {
-    eager: true,
-  })
-  reaction_users: Reaction[];
+  @JoinColumn()
+  reactions: Publication[];
 }

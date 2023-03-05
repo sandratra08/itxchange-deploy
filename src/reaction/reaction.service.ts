@@ -1,22 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { PublicationService } from 'src/publication/publication.service';
-import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
+import { DbPublicationDto } from './../publication/dto/db-publication.dto';
 import { CreateReactionDto } from './dto/create-reaction.dto';
-import { DbReactionDto } from './dto/db-reaction.dto';
-import { ReactionBuilder } from './entities/reaction.entity';
 
 @Injectable()
 export class ReactionService {
   constructor(
     private usersService: UsersService,
     private publicationsService: PublicationService,
-    @InjectRepository(Reaction)
-    private reactionsRepository: Repository<Reaction>,
   ) {}
 
   async create(user: User, dto: CreateReactionDto) {
@@ -37,47 +31,23 @@ export class ReactionService {
         HttpStatus.NOT_FOUND,
       );
     }
-    let reaction = ReactionBuilder.builder()
-      .publication(publication)
-      .user(db_user)
-      .build();
 
-    reaction = await this.reactionsRepository.save(reaction);
+    publication.interactors.push(db_user);
 
-    return new DbReactionDto(reaction);
+    await this.publicationsService.createInteraction(publication);
+    return new DbPublicationDto(publication);
   }
 
-  async findAll() {
-    const reactions = await this.reactionsRepository.find();
-    return reactions.map((reaction) => new DbReactionDto(reaction));
+  findAllByPublication(publication_id: number) {
+    return this.publicationsService.findById(publication_id);
   }
 
-  async findAllByPublication(publication_id: number) {
-    const reactions = await this.reactionsRepository.find({
-      where: {
-        publication: {
-          id: publication_id,
-        },
-      },
-    });
-    return reactions.map((reaction) => new DbReactionDto(reaction));
-  }
-
-  async findOne(id: number) {
-    const reaction = await this.reactionsRepository.findOne({ where: { id } });
-    return new DbReactionDto(reaction);
-  }
-
-  async remove(user: User, id: number) {
-    const reaction = await this.reactionsRepository.findOne({
-      where: {
-        user: {
-          id: user.id,
-        },
-        id,
-      },
-    });
-    if (!reaction) {
+  async remove(user: User, publication_id: number) {
+    const publication = await this.publicationsService.findByInteractor(
+      user.id,
+      publication_id,
+    );
+    if (!publication) {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
@@ -86,6 +56,9 @@ export class ReactionService {
         HttpStatus.NOT_FOUND,
       );
     }
-    await this.reactionsRepository.delete(id);
+    publication.interactors = publication.interactors.filter(
+      (interactor) => interactor.id !== user.id,
+    );
+    await this.publicationsService.removeInteraction(publication);
   }
 }

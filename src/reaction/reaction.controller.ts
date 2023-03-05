@@ -23,19 +23,9 @@ export class ReactionController {
     return this.reactionService.create(request, createReactionDto);
   }
 
-  @Get()
-  findAll() {
-    return this.reactionService.findAll();
-  }
-
   @Get('publications/:id')
   findAllByPublication(@Param('id', ParseIntPipe) id: number) {
     return this.reactionService.findAllByPublication(id);
-  }
-
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.reactionService.findOne(+id);
   }
 
   @Delete(':id')

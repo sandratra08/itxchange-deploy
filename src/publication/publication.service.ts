@@ -118,4 +118,24 @@ export class PublicationService {
   findById(publication_id: number): Publication | PromiseLike<Publication> {
     return this.publicationsRepository.findOne({ id: publication_id });
   }
+
+  findByInteractor(
+    id: number,
+    publication_id: number,
+  ): Publication | PromiseLike<Publication> {
+    return this.publicationsRepository.findOne({
+      id: publication_id,
+      interactors: {
+        id,
+      },
+    });
+  }
+
+  createInteraction(publication: Publication) {
+    return this.publicationsRepository.save(publication);
+  }
+
+  async removeInteraction(publication: Publication) {
+    await this.publicationsRepository.update(publication.id, publication);
+  }
 }
