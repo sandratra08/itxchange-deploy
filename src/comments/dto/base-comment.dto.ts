@@ -20,6 +20,7 @@ export class DbCommentDto {
     db.content = comment.content;
     db.createdAt = moment(comment.createdAt).format('DD/MM/YYYY hh:mm');
     db.updatedAt = moment(comment.updatedAt).format('DD/MM/YYYY hh:mm');
+    return db;
   }
 
   static arrayDtoFromComments(comments: Comments[]) {

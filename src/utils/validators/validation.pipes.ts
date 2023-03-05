@@ -1,3 +1,4 @@
+import { CreatePublicationDto } from './../../publication/dto/create-publication.dto';
 import {
   ArgumentMetadata,
   BadRequestException,
@@ -50,6 +51,20 @@ export class ParseEntityPipe
       throw new NotFoundException(`${metatype.name} Not Found`);
     }
     return object;
+  }
+}
+
+@Injectable()
+export class ParsePublicationDtoPipe
+  implements PipeTransform<CreatePublicationDto, CreatePublicationDto>
+{
+  transform(
+    value: CreatePublicationDto,
+    {}: ArgumentMetadata,
+  ): CreatePublicationDto {
+    const tags = value.tags.toString();
+    value.tags = tags.split(',');
+    return value;
   }
 }
 

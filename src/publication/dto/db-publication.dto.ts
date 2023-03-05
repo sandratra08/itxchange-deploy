@@ -1,20 +1,32 @@
 import { Publication } from '../entities/publication.entity';
-
+import { DbCommentDto } from './../../comments/dto/base-comment.dto';
+import { DBTagDto } from './../../tag/dto/db-tag.dto';
+import { DbUserDto } from './../../users/dto/db-user.dto';
+import { parseDateToString } from './../../utils/index';
 export class DbPublicationDto {
   id: number;
-  date: Date;
+  date: string;
   view: number;
   type: string;
   body: string;
   file: string;
+  tag: DBTagDto[];
+  comments: DbCommentDto[];
+  user: DbUserDto;
 
   constructor(publication: Publication) {
     this.id = publication.id;
-    this.date = publication.date;
+    this.date = parseDateToString(publication.date);
     this.view = publication.view;
     this.type = publication.type;
     this.body = publication.body;
     this.file = publication.file;
+    this.tag = publication.tags.map((tag) => new DBTagDto(tag));
+    this.comments =
+      publication.comments?.map((comment) =>
+        DbCommentDto.dtoFromComment(comment),
+      ) || [];
+    this.user = DbUserDto.dtoFromUser(publication.user);
   }
 }
 
@@ -26,7 +38,7 @@ export class DbPublicationBuilder {
     return this;
   }
 
-  date(date: Date) {
+  date(date: string) {
     this.dto.date = date;
     return this;
   }
@@ -58,7 +70,7 @@ export class DbPublicationBuilder {
     return publications.map((publication) =>
       new DbPublicationBuilder()
         .id(publication.id)
-        .date(publication.date)
+        .date(parseDateToString(publication.date))
         .view(publication.view)
         .type(publication.type)
         .file(publication.file)

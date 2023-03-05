@@ -34,7 +34,11 @@ export class PublicationService {
       id: user.id,
     });
 
-    const tags = await this.tagService.bulkCreate(dto.tags);
+    const data = await this.tagService.cleanBeforeInsert(dto.tags);
+    let tags = await this.tagService.bulkCreate(data.notIn);
+
+    const tags_in = await this.tagService.getTagsByName(data.in);
+    tags = tags.concat(tags_in);
 
     const filename = await this.detaModule.uploadPublicationFile(
       file.originalname,
@@ -45,6 +49,7 @@ export class PublicationService {
       .user(user)
       .file(filename)
       .body(dto.body)
+      .type(dto.type)
       .tags(tags)
       .build();
 

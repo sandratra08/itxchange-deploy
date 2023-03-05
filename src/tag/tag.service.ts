@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { BaseTagDto } from './dto/base-tag.dto';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { DBTagDto } from './dto/db-tag.dto';
@@ -29,7 +29,11 @@ export class TagService {
   }
 
   async bulkCreate(data: string[]) {
-    const instances = data.map((d) => TagBuilder.builder().name(d).build());
+    const instances = data.map((tag) => {
+      const instance = new Tag();
+      instance.name = tag;
+      return instance;
+    });
     const tags = await this.tagsRepository.save(instances);
     return tags;
   }
@@ -63,5 +67,30 @@ export class TagService {
     });
 
     return values.filter((value) => tags.find((tag) => tag.name !== value));
+  }
+
+  async cleanBeforeInsert(values: string[]) {
+    const tags = await this.getTagsByName(values);
+    const tag_names = tags.map((tag) => tag.name);
+    const result = {
+      in: [],
+      notIn: [],
+    };
+    values.forEach((value) => {
+      if (tag_names.includes(value)) {
+        result.in.push(value);
+      } else {
+        result.notIn.push(value);
+      }
+    });
+    return result;
+  }
+
+  async getTagsByName(values: string[]) {
+    return this.tagsRepository.find({
+      where: {
+        name: In([...values]),
+      },
+    });
   }
 }

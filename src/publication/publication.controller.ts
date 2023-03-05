@@ -15,15 +15,25 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
-import { ParseEntityPipe } from './../utils/validators/validation.pipes';
+import {
+  ParseEntityPipe,
+  ParsePublicationDtoPipe,
+  ValidationPipe,
+} from './../utils/validators/validation.pipes';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { DbPublicationDto } from './dto/db-publication.dto';
 import { Publication } from './entities/publication.entity';
 import { PublicationService } from './publication.service';
 
 @Controller('publications')
+@ApiTags('Publications')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 
@@ -39,7 +49,7 @@ export class PublicationController {
   @UseInterceptors(FileInterceptor('file'))
   create(
     @Request() request: any,
-    @Body() dto: CreatePublicationDto,
+    @Body(ValidationPipe, ParsePublicationDtoPipe) dto: CreatePublicationDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.publicationService.create(request.user, dto, file);
@@ -76,7 +86,7 @@ export class PublicationController {
   update(
     @Request() req: any,
     @Param('id') publication: Publication,
-    @Body() dto: CreatePublicationDto,
+    @Body(ValidationPipe, ParsePublicationDtoPipe) dto: CreatePublicationDto,
   ) {
     return this.publicationService.update(req.user, publication, dto);
   }

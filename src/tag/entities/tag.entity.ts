@@ -1,9 +1,9 @@
 import { Publication } from 'src/publication/entities/publication.entity';
 import {
   Column,
+  Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  Entity,
   Unique,
 } from 'typeorm';
 
@@ -22,6 +22,7 @@ export class Tag {
 
 export class TagBuilder {
   private tag: Tag;
+
   id(id: number) {
     this.tag.id = id;
     return this;
@@ -32,14 +33,15 @@ export class TagBuilder {
     return this;
   }
 
-  build() {
-    return this.tag;
-  }
-
   publications(publications: Publication[]) {
     this.tag.publications = publications;
     return this;
   }
+
+  build() {
+    return this.tag;
+  }
+
   public static builder() {
     return new TagBuilder();
   }
