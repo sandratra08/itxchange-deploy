@@ -4,7 +4,6 @@ import {
   Injectable,
   UploadedFile,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { DetaService } from './../deta/deta.service';
@@ -21,7 +20,6 @@ import { PublicationRepository } from './publication.repository';
 export class PublicationService {
   constructor(
     private usersService: UsersService,
-    @InjectRepository(Publication)
     private publicationsRepository: PublicationRepository,
     private readonly detaModule: DetaService,
     private readonly tagService: TagService,
