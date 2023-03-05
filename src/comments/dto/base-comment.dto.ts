@@ -1,18 +1,25 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Min, MinLength } from 'class-validator';
 import { Comments } from './../entities/comment.entity';
 import * as moment from 'moment';
 
 export class BaseCommentDto {
-  @MinLength(2)
+  @ApiProperty()
+  @MinLength(1)
   content: string;
-  @Min(2)
+
+  @ApiProperty()
+  @Min(1)
   publication_id: number;
 }
 export class CreateCommentDto extends BaseCommentDto {}
 
 export class DbCommentDto {
+  @ApiProperty()
   content: string;
+  @ApiProperty()
   createdAt: string;
+  @ApiProperty()
   updatedAt: string;
 
   static dtoFromComment(comment: Comments) {

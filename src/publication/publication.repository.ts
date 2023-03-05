@@ -24,12 +24,14 @@ export class PublicationRepository {
   findOne(fields: EntityCondition<Publication>) {
     return this.publicationsRepository.findOne({
       where: fields,
+      relations: ['tags', 'user', 'comments'],
     });
   }
 
   filter(fields: EntityCondition<Publication>) {
     return this.publicationsRepository.find({
       where: fields,
+      relations: ['tags', 'user', 'comments'],
     });
   }
 

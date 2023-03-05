@@ -42,7 +42,7 @@ export class Comments {
 }
 
 export class CommentBuilder {
-  private comment: Comments;
+  private comment: Comments = new Comments();
 
   public static builder() {
     return new CommentBuilder();

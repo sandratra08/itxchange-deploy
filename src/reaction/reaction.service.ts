@@ -3,7 +3,6 @@ import { Publication } from 'src/publication/entities/publication.entity';
 import { PublicationService } from 'src/publication/publication.service';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { DbPublicationDto } from './../publication/dto/db-publication.dto';
 import { CreateReactionDto } from './dto/create-reaction.dto';
 
 @Injectable()
@@ -36,7 +35,6 @@ export class ReactionService {
     publication.total_interactions += 1;
 
     await this.publicationsService.createInteraction(publication);
-    return new DbPublicationDto(publication);
   }
 
   findAllByPublication(publication_id: number) {

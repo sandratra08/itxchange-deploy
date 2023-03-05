@@ -72,17 +72,17 @@ export class User extends EntityHelper {
   lastName: string | null;
 
   @ManyToOne(() => FileEntity, {
-    lazy: true,
+    eager: true,
   })
   photo?: FileEntity | null;
 
   @ManyToOne(() => Role, {
-    lazy: true,
+    eager: true,
   })
   role?: Role | null;
 
   @ManyToOne(() => Status, {
-    lazy: true,
+    eager: true,
   })
   status?: Status;
 

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { ParseEntityPipe } from './../utils/validators/validation.pipes';
 import { CommentsService } from './comments.service';
@@ -30,16 +30,31 @@ export class CommentsController {
   }
 
   @Get(':publication_id')
+  @ApiParam({
+    name: 'publication_id',
+    required: true,
+    type: 'number',
+  })
   findAll(@Param('publication_id', ParseEntityPipe) publication: Publication) {
     return this.commentsService.findAllByPublication(publication.id);
   }
 
   @Get(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   findOne(@Param('id') comment: Comments) {
     return this.commentsService.findOne(comment);
   }
 
   @Patch(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   update(
     @Param('id') comment: Comments,
     @Body() updateCommentDto: BaseCommentDto,
@@ -48,6 +63,11 @@ export class CommentsController {
   }
 
   @Delete(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   remove(@Param('id') comment: Comments) {
     return this.commentsService.remove(comment);
   }

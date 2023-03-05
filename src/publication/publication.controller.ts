@@ -19,6 +19,7 @@ import {
   ApiBearerAuth,
   ApiConsumes,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
@@ -55,10 +56,20 @@ export class PublicationController {
     return this.publicationService.create(request.user, dto, file);
   }
 
-  @Post(':user_id/:publication_id/')
+  @Post(':user_id/:id/')
+  @ApiParam({
+    name: 'user_id',
+    required: true,
+    type: 'number',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   async addView(
     @Param('user_id', ParseEntityPipe) user: User,
-    @Param('publication_id', ParseEntityPipe) publication: Publication,
+    @Param('id', ParseEntityPipe) publication: Publication,
   ) {
     await this.publicationService.addView(user, publication);
   }
@@ -72,6 +83,11 @@ export class PublicationController {
   }
 
   @Get('/profile/:id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   @ApiOkResponse({
     type: Array<DbPublicationDto>,
   })
@@ -80,6 +96,11 @@ export class PublicationController {
   }
 
   @Get(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   @ApiOkResponse({
     type: DbPublicationDto,
   })
@@ -88,6 +109,11 @@ export class PublicationController {
   }
 
   @Patch(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   @ApiOkResponse({
     type: DbPublicationDto,
   })
@@ -100,6 +126,11 @@ export class PublicationController {
   }
 
   @Delete(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: 'number',
+  })
   remove(
     @Request() req: any,
     @Param('id', ParseEntityPipe) publication: Publication,

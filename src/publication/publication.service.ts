@@ -70,7 +70,7 @@ export class PublicationService {
   }
 
   findOne(publication: Publication) {
-    return new DbPublicationDto(publication);
+    return this.publicationsRepository.findOne({ id: publication.id });
   }
 
   async update(
