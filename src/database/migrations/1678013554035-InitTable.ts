@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitTable1678010693106 implements MigrationInterface {
-    name = 'InitTable1678010693106'
+export class InitTable1678013554035 implements MigrationInterface {
+    name = 'InitTable1678013554035'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "publication" ALTER COLUMN "date" SET DEFAULT 'NOW()'`);
@@ -10,9 +10,9 @@ export class InitTable1678010693106 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "comments" ALTER COLUMN "updatedAt" SET DEFAULT '2023-03-05 10:03:23.356868'`);
-        await queryRunner.query(`ALTER TABLE "comments" ALTER COLUMN "createdAt" SET DEFAULT '2023-03-05 10:03:23.356868'`);
-        await queryRunner.query(`ALTER TABLE "publication" ALTER COLUMN "date" SET DEFAULT '2023-03-05 10:03:23.356868'`);
+        await queryRunner.query(`ALTER TABLE "comments" ALTER COLUMN "updatedAt" SET DEFAULT '2023-03-05 10:08:52.168631'`);
+        await queryRunner.query(`ALTER TABLE "comments" ALTER COLUMN "createdAt" SET DEFAULT '2023-03-05 10:08:52.168631'`);
+        await queryRunner.query(`ALTER TABLE "publication" ALTER COLUMN "date" SET DEFAULT '2023-03-05 10:08:52.168631'`);
     }
 
 }

@@ -106,9 +106,11 @@ export class User extends EntityHelper {
   @OneToMany(() => Comments, (comment) => comment.user)
   comments: Comments[];
 
-  @ManyToMany(() => Publication, (publications) => publications.interactors, {
-    eager: true,
-  })
+  @ManyToMany(() => Publication, (publications) => publications.interactors)
   @JoinColumn()
   reactions: Publication[];
+
+  @ManyToMany(() => Publication, (publications) => publications.viewers)
+  @JoinColumn()
+  views: Publication[];
 }

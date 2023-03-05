@@ -55,6 +55,11 @@ export class Publication {
     eager: true,
   })
   interactors: User[];
+
+  @OneToMany(() => User, (user) => user.views, {
+    eager: true,
+  })
+  viewers: User[];
 }
 
 export class PublicationBuilder {
