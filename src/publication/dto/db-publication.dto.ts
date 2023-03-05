@@ -1,3 +1,5 @@
+import { Tag } from 'src/tag/entities/tag.entity';
+import { Comments } from './../../comments/entities/comment.entity';
 import { Publication } from '../entities/publication.entity';
 import { DbCommentDto } from './../../comments/dto/base-comment.dto';
 import { DBTagDto } from './../../tag/dto/db-tag.dto';
@@ -10,7 +12,7 @@ export class DbPublicationDto {
   type: string;
   body: string;
   file: string;
-  tag: DBTagDto[];
+  tags: DBTagDto[];
   comments: DbCommentDto[];
   user: DbUserDto;
 
@@ -21,7 +23,7 @@ export class DbPublicationDto {
     this.type = publication.type;
     this.body = publication.body;
     this.file = publication.file;
-    this.tag = publication.tags.map((tag) => new DBTagDto(tag));
+    this.tags = publication.tags.map((tag) => new DBTagDto(tag));
     this.comments =
       publication.comments?.map((comment) =>
         DbCommentDto.dtoFromComment(comment),
@@ -31,35 +33,52 @@ export class DbPublicationDto {
 }
 
 export class DbPublicationBuilder {
-  private dto: DbPublicationDto;
+  private db: DbPublicationDto;
 
   id(id: number) {
-    this.dto.id = id;
+    this.db.id = id;
     return this;
   }
 
   date(date: string) {
-    this.dto.date = date;
+    this.db.date = date;
+    return this;
+  }
+
+  body(body: string) {
+    this.db.body = body;
     return this;
   }
 
   view(view: number) {
-    this.dto.view = view;
+    this.db.view = view;
     return this;
   }
 
   type(type: string) {
-    this.dto.type = type;
+    this.db.type = type;
+    return this;
+  }
+
+  tags(tags: Tag[]) {
+    this.db.tags = tags.map((tag) => new DBTagDto(tag));
     return this;
   }
 
   file(file: string) {
-    this.dto.file = file;
+    this.db.file = file;
+    return this;
+  }
+
+  comments(comments: Comments[]) {
+    this.db.comments = comments.map((comment) =>
+      DbCommentDto.dtoFromComment(comment),
+    );
     return this;
   }
 
   build() {
-    return this.dto;
+    return this.db;
   }
 
   public static builder(): DbPublicationBuilder {
@@ -67,14 +86,6 @@ export class DbPublicationBuilder {
   }
 
   public static getArrayFromBuild(publications: Publication[]) {
-    return publications.map((publication) =>
-      new DbPublicationBuilder()
-        .id(publication.id)
-        .date(parseDateToString(publication.date))
-        .view(publication.view)
-        .type(publication.type)
-        .file(publication.file)
-        .build(),
-    );
+    return publications.map((publication) => new DbPublicationDto(publication));
   }
 }

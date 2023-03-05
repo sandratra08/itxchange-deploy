@@ -46,7 +46,9 @@ export class Publication {
   })
   tags: Tag[];
 
-  @OneToMany(() => Comments, (comments) => comments.publication)
+  @OneToMany(() => Comments, (comments) => comments.publication, {
+    eager: true,
+  })
   comments: Comments[];
 }
 
