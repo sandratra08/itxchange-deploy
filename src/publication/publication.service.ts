@@ -114,4 +114,8 @@ export class PublicationService {
       );
     }
   }
+
+  findById(publication_id: number): Publication | PromiseLike<Publication> {
+    return this.publicationsRepository.findOne({ id: publication_id });
+  }
 }

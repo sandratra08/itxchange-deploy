@@ -98,7 +98,4 @@ export class PublicationController {
   ) {
     return this.publicationService.remove(req.user, publication.id);
   }
-
-  // TODO: GET COMMENTS BY PUBLICATION
-  // TODO: GET REACTION BY PUBLICATION
 }

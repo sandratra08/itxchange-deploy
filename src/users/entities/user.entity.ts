@@ -1,3 +1,4 @@
+import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { Comments } from './../../comments/entities/comment.entity';
 import { Publication } from './../../publication/entities/publication.entity';
 import {
@@ -103,4 +104,14 @@ export class User extends EntityHelper {
 
   @OneToMany(() => Comments, (comment) => comment.user)
   comments: Comments[];
+
+  @OneToMany(() => Reaction, (reactions) => reactions.user, {
+    eager: true,
+  })
+  reactions: Reaction[];
+
+  @OneToMany(() => Reaction, (reactions) => reactions.users_views, {
+    eager: true,
+  })
+  reaction_users: Reaction[];
 }

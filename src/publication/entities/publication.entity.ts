@@ -1,3 +1,4 @@
+import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { Comments } from './../../comments/entities/comment.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -50,6 +51,11 @@ export class Publication {
     eager: true,
   })
   comments: Comments[];
+
+  @OneToMany(() => Reaction, (reactions) => reactions.publication, {
+    eager: true,
+  })
+  reactions: Reaction[];
 }
 
 export class PublicationBuilder {

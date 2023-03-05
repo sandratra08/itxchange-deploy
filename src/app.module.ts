@@ -32,6 +32,7 @@ import { DetaService } from './deta/deta.service';
 import { DetaModule } from './deta/deta.module';
 import { TagModule } from './tag/tag.module';
 import { CommentsModule } from './comments/comments.module';
+import { ReactionModule } from './reaction/reaction.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { CommentsModule } from './comments/comments.module';
     DetaModule,
     TagModule,
     CommentsModule,
+    ReactionModule,
   ],
   providers: [DetaService],
 })
